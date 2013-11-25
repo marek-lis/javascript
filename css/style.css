@@ -1,0 +1,72 @@
+body {
+	background-color: #F6F7BB;
+}
+
+h1 {
+	text-align: center;
+	color: #2391B4;
+}
+
+p {
+	text-align: center;
+}
+
+button {
+	width: 150px;
+	height: 64px;
+	margin-left: 75px;
+	margin-right: 75px;
+	margin-top: 45px;
+}
+
+.playfield {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	width: 300px;
+	height: 450px;
+	margin-left: -150px;
+	margin-top: -285px;
+	/*border: 1px solid #FF0000;*/
+}
+
+.board{
+	top: 0px;
+	left: 0px;
+	width: 299px;
+	height: 299px;
+	margin-bottom: 10px;
+	border: 0px solid #2391B4;
+	background-color: #FFFFFF;
+	outline-color: #2391B4;
+	outline-style: solid;
+	outline-width: 2px;
+}
+
+.queue {
+	width: 300px;
+	height: 146px;
+	margin-left: -2px;
+	margin-top: 0px;
+	border-width: 2px;
+	border-color: #2391B4;
+	border-style: dashed;
+	background-color: #BC3E2B;
+}
+
+.item {
+	position:absolute;
+	width: 99px;
+	height: 99px;
+	margin-top: 0px;
+	margin-left: 0px;
+	border: 1px solid #2391B4;
+	background-color: #FFFFFF;
+}
+
+div .ui-state-disabled,
+div .ui-widget-content .ui-state-disabled,
+div .ui-widget-header .ui-state-disabled {
+	opacity: 1.0;
+	filter:Alpha(Opacity=100);
+}
