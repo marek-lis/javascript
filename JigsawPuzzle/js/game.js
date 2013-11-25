@@ -200,7 +200,6 @@ $(document).ready(function(){
 	}
 	
 	function validate() {
-	console.log("PUZZLE:  " + correctItems + " " + itemsNum);
 		if (correctItems == itemsNum) {
 			timeStopped = new Date().getTime();
 			var timeElapsed = Math.round(10 * (timeStopped - timeStarted) / 1000) / 10;
@@ -217,7 +216,6 @@ $(document).ready(function(){
 	
 	function showDialog(message) {
 		info.html(message);
-		console.log("ZZZ: " + getTopZ($('body')));
 		dialog.css('zIndex', getTopZ($('body')));
 		dialog.dialog("open");
 		dialog.dialog("moveToTop");
@@ -271,11 +269,9 @@ $(document).ready(function(){
 		var draggable = ui.helper;
 		draggable.css('zIndex', getTopZ(draggable));
 		draggable.draggable({ revert: true });
-		console.log("onItemDragStartHandler " + event + " " + ui);
 	}
 	
 	function onItemDroppedHandler(event, ui) {
-		console.log("onItemDroppedHandler " + event + " " + ui);
 		var draggable = ui.draggable;
 		var droppable = $(this);
 		var item = items[draggable.attr('id')];
@@ -294,7 +290,6 @@ $(document).ready(function(){
 			correctItems++;
 			validate();
 		} else {
-			console.log("BACK!");
 			draggable.draggable({ revert: true });
 		}
 	}
@@ -306,7 +301,6 @@ $(document).ready(function(){
 		boardY = board.position().top - 1,
 		queueX = this.target.position().left - 1,
 		queueY = this.target.position().top - 1;
-		console.log("TARGETTT: " + target.attr('class'));
 		for (id in items) {
 			$("#"+id).animate({left: items[id].ref.position().left - 1 + items[id].posX, top: items[id].ref.position().top - 1 + items[id].posY}, 100);
 		}
