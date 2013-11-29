@@ -1,14 +1,42 @@
+/**
+*
+* JIGSAW PUZZLE, CSS
+* 27.11.2013, Wroclaw
+* Marek Lis 
+* www.LinkedIn.com/in/mareklis
+* www.GoldenLine.pl/marek-lis
+*
+**/
+
 body {
 	background-color: #F6F7BB;
 }
 
-h1 {
-	text-align: center;
-	color: #2391B4;
-}
-
 p {
 	text-align: center;
+}
+
+a:link, a:visited {
+	color: #0000B4;
+}
+
+a:hover, a:active {
+	color: #0000FF;
+}
+
+header {
+	margin: 4px;
+	color: #2391B4;
+	text-align: center;
+	font-size: 40px;
+}
+
+footer {
+	margin: 4px;
+	color: #2391B4;
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 8px;
 }
 
 button {
@@ -27,7 +55,6 @@ button {
 	height: 450px;
 	margin-left: -150px;
 	margin-top: -285px;
-	/*border: 1px solid #FF0000;*/
 }
 
 .board{
@@ -68,5 +95,5 @@ div .ui-state-disabled,
 div .ui-widget-content .ui-state-disabled,
 div .ui-widget-header .ui-state-disabled {
 	opacity: 1.0;
-	filter:Alpha(Opacity=100);
+	/*filter:Alpha(Opacity=100);*/
 }

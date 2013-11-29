@@ -1,3 +1,13 @@
+/**
+*
+* JIGSAW PUZZLE, JS
+* 27.11.2013, Wroclaw
+* Marek Lis 
+* www.LinkedIn.com/in/mareklis
+* www.GoldenLine.pl/marek-lis
+*
+**/
+
 $(document).ready(function(){
 	var items = {},
 	holders = {}, 
@@ -22,10 +32,10 @@ $(document).ready(function(){
 	$(window).resize(onWindowResizeHandler);
 	
 	start.button();
-	dialog.dialog({ closeOnEscape: true });
+	dialog.dialog({closeOnEscape: true});
 	dialog.dialog("close");
-	dialog.dialog( "option", "modal", true );
-	dialog.dialog( "option", "width", 400 );
+	dialog.dialog("option", "modal", true);
+	dialog.dialog("option", "width", 400);
 	
 	start.fadeOut(0);
 	
@@ -35,7 +45,7 @@ $(document).ready(function(){
 		initItems(board);
 		moveItems(board, 0, "sort");
 		fadeItems(board, 1000, "fadeIn", function() {
-			intro();
+			showDialog("Welcome to Jigsaw Puzzle :)");
 			start.fadeIn(500);
 			start.click(onStartClickedHandler);
 		});
@@ -66,54 +76,50 @@ $(document).ready(function(){
 		var row, col, id, item, ix, iy;
 		for (row=0; row<rows; row++) {
 			for (col=0; col<cols; col++) {
-			//	if (col < cols - 1 || row < rows - 1) {
+				//if (col < cols - 1 || row < rows - 1) {
 					id = "item_" + col + "_" + row;
 					target.append("<div id="+id+" class='item'></div>");
 					item = $("#"+id);
 					item.fadeOut(0);
 					item.css('background-image', 'url(' + src + ')');
 					item.css('background-position', '-' + (col * itemWidth) + 'px -' + (row * itemHeight) + 'px');
-					item.css('border-color', '#BC3E2B');
+					item.css('border-color', '#2391B4');
 					item.css('zIndex', zIndex++);
 					item.draggable({start: onItemDragStartHandler});
 					item.draggable("option", "revertDuration", 100 );
 					item.mousedown(function(){onItemMouseDownHandler($(this));});
+					item.draggable('disable');
 					items[id] = {obj: item, ref: board, posX: 0, posY: 0};
 					itemsNum++;
-			//	}
+				//}
 			}
 		}
 	}
 	
 	function isLocalStorageAvailable() {
-		return typeof(Storage) !== "undefined";
+		return typeof(Storage) !== "undefined" && localStorage;
 	}
 	
 	function saveSettings() {
-	//	if (isLocalStorageAvailable()) {
-	//		var settings = {timeBest: timeBest};
-	//		localStorage.setItem('JigsawPuzzleSettings', JSON.stringify(settings));
-	//	}
+		if (isLocalStorageAvailable()) {
+			var settings = {minTime: timeBest};
+			localStorage.setItem('JigsawPuzzleSettings', JSON.stringify(settings));
+		}
 	}
 	
 	function loadSettings() {
-	//	if (isLocalStorageAvailable()) {
-	//		var settings = JSON.parse(localStorage.getItem('JigsawPuzzleSettings'));
-	//		settings ? timeBest = parseInt(settings.timeBest, 10) : -1;
-	//		console.log("Current best time is: " + timeBest);
-	//	}
+		if (isLocalStorageAvailable()) {
+			var settings, data;
+			data = localStorage.getItem('JigsawPuzzleSettings');
+			if (data) {
+				settings = JSON.parse(data);
+			}
+			settings ? timeBest = parseInt(settings.minTime, 10) : -1;
+		}
 	}
 	
-	function intro() {
-		showDialog("Welcome to Jigsaw Puzzle :)");
-	}
-	
-	function restart() {
-		var row, col, id, draggable, droppable, 
-		z = 10;//getTopZ();
-		correctItems = 0;
-		timeStarted = 0;
-		timeStopped = 0;
+	function enable() {
+		var row, col, id, draggable, droppable;
 		for (row=0; row<rows; row++) {
 			for (col=0; col<cols; col++) {
 				id = col + "_" + row;
@@ -123,9 +129,26 @@ $(document).ready(function(){
 				}
 				draggable = $("#item_"+id);
 				if (draggable.attr('id')) {
-					draggable.css('zIndex', getRandomZ(draggable, z, z + 10));
+					//draggable.css('zIndex', getRandomZ(draggable, z, z + 10));
+					draggable.css('border-color','#BC3E2B');
 					draggable.draggable({ revert: false });
 					draggable.draggable('enable');
+				}
+			}
+		}
+	}
+	
+	function restart() {
+		var row, col, id, draggable, z = 10;//getTopZ();
+		correctItems = 0;
+		timeStarted = 0;
+		timeStopped = 0;
+		for (row=0; row<rows; row++) {
+			for (col=0; col<cols; col++) {
+				id = col + "_" + row;
+				draggable = $("#item_"+id);
+				if (draggable.attr('id')) {
+					draggable.css('zIndex', getRandomZ(draggable, z, z + 10));
 				}
 			}
 		}
@@ -204,13 +227,11 @@ $(document).ready(function(){
 			timeStopped = new Date().getTime();
 			var timeElapsed = Math.round(10 * (timeStopped - timeStarted) / 1000) / 10;
 			timeBest = Math.min(timeElapsed, timeBest > 0 ? timeBest : timeElapsed);
-			saveSettings();
-			start.fadeIn(500);
-			var message = "Congratulations!<br/>You solved the puzzle in " + timeElapsed + " seconds.<br/>The current best time is " + timeBest + " seconds.";
-			message += "<br/>Can you beat it?";
-			//if (timeElapsed > timeBest) message += "<br/>Try to beat it!";
-			//else message += "<br/>This is your best time :)";
-			showDialog(message);
+			setTimeout(function() {
+				saveSettings();
+				start.fadeIn(500);
+				showDialog("Congratulations!<br/>You solved the puzzle in " + timeElapsed + " seconds.<br/>The current best time is " + timeBest + " seconds.<br/>Can you beat it?");
+			}, 300);
 		}
 	}
 	
@@ -244,8 +265,12 @@ $(document).ready(function(){
 	}
 	
 	function getItemPos(item) {
-		var parts = item.attr('id').split("_");
-		return {col: parts[1], row: parts[2]};
+		var result;
+		if (item && item.attr('id')) {
+			var parts = item.attr('id').split("_");
+			result = {col: parts[1], row: parts[2]};
+		}
+		return result;
 	}
 	
 	function isEqualPosition(item1, item2) {
@@ -256,6 +281,7 @@ $(document).ready(function(){
 	
 	function onStartClickedHandler() {
 		restart();
+		setTimeout(enable, 1000);
 		start.fadeOut(300);
 		moveItems(queue, 1000, "spread");
 		timeStarted = new Date().getTime();
@@ -276,6 +302,7 @@ $(document).ready(function(){
 		var droppable = $(this);
 		var item = items[draggable.attr('id')];
 		if (isEqualPosition(draggable, droppable)) {
+			draggable.css('border-color','#2391B4');
 			draggable.draggable({ revert: false });
 			draggable.draggable('disable');
 			droppable.droppable('disable');
@@ -299,8 +326,8 @@ $(document).ready(function(){
 		var id,
 		boardX = board.position().left - 1,
 		boardY = board.position().top - 1,
-		queueX = this.target.position().left - 1,
-		queueY = this.target.position().top - 1;
+		queueX = target.position().left - 1,
+		queueY = target.position().top - 1;
 		for (id in items) {
 			$("#"+id).animate({left: items[id].ref.position().left - 1 + items[id].posX, top: items[id].ref.position().top - 1 + items[id].posY}, 100);
 		}
